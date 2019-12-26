@@ -36,3 +36,14 @@
     transform: rotate(360deg);
   }
 }
+
+.map {
+  height: 800px;
+}
+
+.page-container {
+  padding: 1px;
+}
+.page-container .copy-right{
+  text-align: center;
+}
