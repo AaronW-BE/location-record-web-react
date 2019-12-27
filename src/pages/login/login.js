@@ -5,6 +5,14 @@ import { Form, Icon, Input, Button, message } from 'antd';
 import Axios from 'axios';
 
 class Login extends React.Component{
+    constructor(props) {
+        super(props);
+
+        this.redirect = this.redirect.bind(this);
+    }
+    redirect() {
+        this.props.history.replace('/');
+    }
     render() {
         return (
             <div className="page-container">
@@ -17,31 +25,37 @@ class Login extends React.Component{
                             <header>登录</header>
                         </div>
                         <div>
-                            <WrappedLoginForm/>
+                            <LoginForm redirect={this.redirect}/>
                         </div>
                     </div>
                 </div>
                 <div className="copy-right">Power By AaronW ♥ {new Date().getFullYear()}</div>
-
             </div>
         );
     }
 }
 
 class LoginForm extends React.Component{
+    constructor(props) {
+        super(props);
+        console.log(this.props)
+    }
     componentDidMount() {
         this.props.form.validateFields();
     }
     handleSubmit = (e) => {
         e.preventDefault();
+        console.log(e);
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 Axios.post("/auth", values).then(res => {
                     message.success("登录成功");
                     let token = res.data.data.token;
-                    console.log(res);
-                    console.log(token);
+                    window.sessionStorage.setItem('token', token);
+
+                    this.props.redirect();
                 }).catch(err => {
+                    console.log(err);
                     message.error("登录失败");
                 });
             }
@@ -77,6 +91,6 @@ class LoginForm extends React.Component{
     }
 }
 
-const WrappedLoginForm = Form.create({"name": "login"})(LoginForm)
+LoginForm = Form.create({"name": "login"})(LoginForm)
 
 export default Login;

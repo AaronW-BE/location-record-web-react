@@ -5,19 +5,31 @@ import {Map} from "react-amap";
 const MAP_KEY = "069e239f00d6ab38ba51c8e4302dc4eb";
 
 class MapBox extends React.Component{
-    constructor() {
-        super();
 
-        this.state = {
+    componentWillReceiveProps(nextProps, nextContext) {
+        this.setState({
+            path: nextProps.path
+        })
+    }
+
+    constructor(props) {
+        super(props);
+        const defaultProps = {
             mapCenter: {
                 longitude: 120.150446,
                 latitude: 30.280413
             },
+            zoom: 18,
+            path: [],
+        };
+        let states = {};
+        Object.assign(states, props, defaultProps);
+        this.state = {
             plugins: [
                 'OverView',
                 'ControlBar',
             ],
-            zoom: 17,
+            ...states,
         };
 
         this.amapEvents = {
@@ -26,19 +38,6 @@ class MapBox extends React.Component{
             }
         }
     }
-
-    handleZoomIn() {
-        this.setState({
-            zoom: this.state.zoom + 1
-        })
-    }
-
-    handleZoomOut() {
-        this.setState({
-            zoom: this.state.zoom - 1
-        })
-    }
-
     render() {
         return <div className="app">
             <div className="map">
@@ -48,18 +47,16 @@ class MapBox extends React.Component{
                      plugins={this.state.plugins}
                      useAMapUI={true}
                      events={this.amapEvents}>
-                    <MovementPath />
+                    <MovementPath path={this.state.path} />
                 </Map>
             </div>
-            <button onClick={this.handleZoomIn.bind(this)}>zoom +</button>
-            <button onClick={this.handleZoomOut.bind(this)}>zoom -</button>
         </div>
     }
 }
 
 class MovementPath extends React.Component{
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.loadUI();
     }
 
@@ -105,16 +102,7 @@ class MovementPath extends React.Component{
 
         pathSimplifierIns.setData([{
             name: 'line',
-            path: [
-                [120.150446, 30.280413],
-                [120.205289, 30.904987],
-                [120.305289, 30.904987],
-                [120.3, 30.1],
-                [120.4, 30.23],
-                [120.5, 30.3],
-                [120.305289, 30.904987],
-
-            ]
+            path: this.props.path
         }]);
 
         let nav = pathSimplifierIns.createPathNavigator(0, {
@@ -127,7 +115,7 @@ class MovementPath extends React.Component{
                     strokeStyle: 'green',
                 },
             },
-            speed: 100000,
+            speed: 10000,
         })
         nav.start();
     }
