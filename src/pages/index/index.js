@@ -14,10 +14,6 @@ class Index extends React.Component{
         this.getLocation();
     }
 
-    // componentDidMount() {
-    //     this.getLocation();
-    // }
-
     render() {
         return (
             <MapBox path={this.state.locations}/>

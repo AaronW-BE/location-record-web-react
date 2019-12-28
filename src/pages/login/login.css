@@ -2,7 +2,7 @@
     width: 750px;
     height: 400px;
     box-shadow: 2px 2px 2px 3px #efefef;
-
+    background-color: #ffffff;
     margin: 200px auto;
     display: flex;
     align-items: center;
@@ -26,4 +26,7 @@
 .form-title-wrapper {
     font-size: 25px;
     padding: 10px;
+}
+
+.page-container {
 }
